@@ -18,9 +18,7 @@ services:
       - ./src:/var/www/html:delegated
     depends_on:
       - php
-      - redis
       - mysql
-      - mailhog
     networks:
       - laravel
 
@@ -39,11 +37,13 @@ services:
       SERVICE_NAME: mysql
     networks:
       - laravel
+    volumes:
+      - ./mysql:/var/lib/mysql
 
   php:
     build:
       context: ./dockerfiles
-      dockerfile: php.dockerfile
+      dockerfile: php.root.dockerfile
       args:
         - UID=${UID:-1000}
         - GID=${GID:-1000}
@@ -54,18 +54,18 @@ services:
     networks:
       - laravel
 
-  redis:
-    image: redis:alpine
-    restart: unless-stopped
-    ports:
-      - "6379:6379"
-    networks:
-      - laravel
+#  redis:
+#    image: redis:alpine
+#    restart: unless-stopped
+#    ports:
+#      - "6379:6379"
+#    networks:
+#      - laravel
 
   composer:
     build:
       context: ./dockerfiles
-      dockerfile: php.dockerfile
+      dockerfile: php.root.dockerfile
       args:
         - UID=${UID:-1000}
         - GID=${GID:-1000}
@@ -93,7 +93,7 @@ services:
   artisan:
     build:
       context: ./dockerfiles
-      dockerfile: php.dockerfile
+      dockerfile: php.root.dockerfile
       args:
         - UID=${UID:-1000}
         - GID=${GID:-1000}
@@ -105,10 +105,10 @@ services:
     networks:
       - laravel
 
-  mailhog:
-    image: mailhog/mailhog:latest
-    ports:
-      - "1025:1025"
-      - "8025:8025"
-    networks:
-      - laravel
+#  mailhog:
+#    image: mailhog/mailhog:latest
+#    ports:
+#      - "1025:1025"
+#      - "8025:8025"
+#    networks:
+#      - laravel
