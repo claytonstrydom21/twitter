@@ -54,14 +54,6 @@ services:
     networks:
       - laravel
 
-#  redis:
-#    image: redis:alpine
-#    restart: unless-stopped
-#    ports:
-#      - "6379:6379"
-#    networks:
-#      - laravel
-
   composer:
     build:
       context: ./dockerfiles
@@ -104,11 +96,3 @@ services:
     entrypoint: [ 'php', '/var/www/html/artisan' ]
     networks:
       - laravel
-
-#  mailhog:
-#    image: mailhog/mailhog:latest
-#    ports:
-#      - "1025:1025"
-#      - "8025:8025"
-#    networks:
-#      - laravel
