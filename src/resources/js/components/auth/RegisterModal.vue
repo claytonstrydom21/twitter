@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import AuthService from "../../services/AuthService.js";
 import Modal from '../ui/Modal.vue'
 import RegisterStepOne from './RegisterStepOne.vue'
 import RegisterStepTwo from './RegisterStepTwo.vue'
@@ -44,30 +45,14 @@ export default {
             this.currentStep = 2
         },
         async handleStepTwo(data) {
-            const formData = {
-                ...this.registrationData,
-                ...data,
-                _token: document.querySelector('meta[name="csrf-token"]').content
-            }
-
             try {
-                const response = await fetch('/register', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    },
-                    body: JSON.stringify(formData)
-                })
-
-                if (response.ok) {
-                    window.location.href = '/set-username'
-                } else {
-                    const error = await response.json()
-                    console.error('Registration failed:', error)
-                }
+                const response = await AuthService.register({
+                    ...this.registrationData,
+                    ...data
+                });
+                window.location.href = response.redirect;
             } catch (error) {
-                console.error('Registration error:', error)
+                console.error('Registration error:', error);
             }
         }
     }
