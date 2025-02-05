@@ -35,6 +35,7 @@
                 </a>
             </li>
         </ul>
+
         <div class="mt-auto border-t border-gray-800">
             <div class="p-4 flex items-center justify-between">
                 <div class="flex items-center space-x-3">
@@ -60,9 +61,13 @@
                             <a href="#" class="block px-4 py-2 text-white hover:bg-gray-800">
                                 Add existing account
                             </a>
-                            <form @submit.prevent="logout" class="block">
-                                <button type="submit" class="w-full text-left px-4 py-2 text-white hover:bg-gray-800">
-                                    Log out @{{ user.username }}
+                            <form @submit.prevent="handleLogout" class="block">
+                                <button
+                                    type="submit"
+                                    class="w-full text-left px-4 py-2 text-white hover:bg-gray-800"
+                                    :disabled="isLoggingOut"
+                                >
+                                    {{ isLoggingOut ? 'Logging out...' : `Log out @${user.username}` }}
                                 </button>
                             </form>
                         </div>
@@ -80,24 +85,57 @@ export default {
         return {
             showDropdown: false,
             user: window.user || {},
-            title: 'X Clone'
+            title: 'X Clone',
+            isLoggingOut: false,
+            csrf: document.querySelector('meta[name="csrf-token"]')?.content
         }
     },
     methods: {
-        logout() {
-            document.getElementById('logout-form').submit();
+        async handleLogout() {
+            if (this.isLoggingOut) return;
+            this.isLoggingOut = true;
+
+            try {
+                const response = await fetch('/logout', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': this.csrf
+                    },
+                    credentials: 'same-origin'
+                });
+
+                if (response.redirected) {
+                    localStorage.clear();
+                    sessionStorage.clear();
+
+                    window.location.href = response.url;
+                } else {
+                    console.error('Unexpected response from logout endpoint');
+                    window.location.href = '/';
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+                alert('An error occurred while logging out. Please try again.');
+            } finally {
+                this.isLoggingOut = false;
+            }
         }
     },
     mounted() {
-        document.addEventListener('click', (e) => {
+        const handleClickOutside = (e) => {
             if (!this.$el.contains(e.target)) {
                 this.showDropdown = false;
             }
-        });
+        };
+
+        document.addEventListener('click', handleClickOutside);
+
+        this.clickHandler = handleClickOutside;
+    },
+    beforeUnmount() {
+        if (this.clickHandler) {
+            document.removeEventListener('click', this.clickHandler);
+        }
     }
 }
 </script>
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:wght@400;700&display=swap');
-</style>
