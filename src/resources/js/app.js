@@ -11,6 +11,8 @@ import PostFeed from "./components/posts/PostFeed.vue";
 import Logo from "./components/misc/Logo.vue";
 import GoogleButton from "./components/misc/GoogleButton.vue";
 import AppleButton from "./components/misc/AppleButton.vue";
+import OrDivider from "./components/misc/OrDivider.vue";
+import Footer from "./components/Footer.vue";
 
 Vue.component('side-nav', SideNav)
 Vue.component('register-modal', RegisterModal)
@@ -22,6 +24,8 @@ Vue.component('set-username-modal', SetUsernameModal)
 Vue.component('logo', Logo)
 Vue.component('apple-button', AppleButton)
 Vue.component('google-button', GoogleButton)
+Vue.component('or-divider', OrDivider)
+Vue.component('footer', Footer)
 
 const app = new Vue({
     el: '#app'
