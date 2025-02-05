@@ -3,11 +3,20 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Services\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class SetUsernameController extends Controller
 {
+    protected $authService;
+
+    public function __construct(AuthService $authService)
+    {
+        $this->authService = $authService;
+    }
+
     public function show()
     {
         return view('auth.set-username');
@@ -15,27 +24,34 @@ class SetUsernameController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'username' => ['required', 'string', 'max:15', 'unique:users,username', 'alpha_dash']
-        ]);
+        try {
+            $validated = $request->validate([
+                'username' => ['required', 'string', 'max:15', 'unique:users,username', 'alpha_dash']
+            ]);
 
-        auth()->user()->update([
-            'username' => $validated['username']
-        ]);
+            $this->authService->setUsername($validated['username']);
 
-        return response()->json(['redirect' => route('home')]);
+            return response()->json(['redirect' => route('home')]);
+        } catch (ValidationException $e) {
+            if (isset($e->errors()['username'])) {
+                foreach ($e->errors()['username'] as $error) {
+                    if (str_contains($error, 'already been taken')) {
+                        return response()->json([
+                            'message' => 'This username has already been taken',
+                            'field' => 'username'
+                        ], 422);
+                    }
+                }
+            }
+            return response()->json([
+                'message' => $e->getMessage()
+            ], 422);
+        }
     }
 
     public function generateSuggestions()
     {
-        $name = auth()->user()->name;
-        $suggestions = [];
-
-        // Generate 5 suggestions
-        for ($i = 0; $i < 5; $i++) {
-            $suggestions[] = Str::lower(str_replace(' ', '', $name) . rand(1000, 9999));
-        }
-
+        $suggestions = $this->authService->generateUsernameSuggestions(auth()->user()->name);
         return response()->json($suggestions);
     }
 }
