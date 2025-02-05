@@ -1,8 +1,9 @@
 <template>
-    <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-8 px-6">
-        <div class="flex justify-center items-center">
-            <logo />
-        </div>
+    <div class="min-h-screen flex flex-col">
+        <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-8 px-6 flex-grow">
+            <div class="flex justify-center items-center">
+                <logo />
+            </div>
 
         <div class="flex flex-col justify-center items-center md:items-start text-center m-5 w-full max-w-lg">
             <h1 class="text-6xl font-extrabold">Happening now</h1>
@@ -11,11 +12,7 @@
             <google-button />
             <apple-button />
 
-            <div class="flex items-center w-3/5 max-w-md my-2">
-                <hr class="flex-grow border-t border-gray-100 opacity-20">
-                <p class="mx-4">or</p>
-                <hr class="flex-grow border-t border-gray-100 opacity-20">
-            </div>
+            <or-divider />
 
             <button
                 @click="showRegisterModal = true"
@@ -50,12 +47,21 @@
             :show="showLoginModal"
             @close="showLoginModal = false"
         />
+        </div>
+
+        <div class="w-full px-6">
+            <Footer />
+        </div>
     </div>
 </template>
 
 <script>
+import Footer from './Footer.vue'
 export default {
     name: 'LandingPage',
+    components: {
+        Footer
+    },
     data() {
         return {
             showRegisterModal: false,
