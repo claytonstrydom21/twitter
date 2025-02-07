@@ -1,8 +1,8 @@
 <template>
-    <div class="flex flex-col items-center space-y-6 w-full">
-        <h2 class="text-2xl font-bold">Create your account</h2>
+    <div class="flex flex-col items-center space-y-6 w-full max-w-md mx-auto">
+        <h2 class="text-xl sm:text-2xl font-bold">Create your account</h2>
 
-        <div class="w-4/5 flex flex-col items-center space-y-6">
+        <div class="w-full flex flex-col items-center space-y-6">
             <div class="relative w-full">
                 <input
                     type="text"

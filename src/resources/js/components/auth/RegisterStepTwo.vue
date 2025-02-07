@@ -2,7 +2,7 @@
     <div class="flex flex-col items-center w-full space-y-6">
         <h2 class="text-2xl font-bold">Create a password</h2>
 
-        <div class="w-4/5 flex flex-col items-center space-y-6">
+        <div class="w-full flex flex-col items-center space-y-6">
             <div class="relative w-full">
                 <input
                     type="password"
@@ -55,16 +55,16 @@
                 <p v-if="confirmError" class="mt-1 text-red-500 text-sm">{{ confirmError }}</p>
             </div>
 
-            <div class="flex space-x-4 w-full">
+            <div class="flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 w-full">
                 <button
                     @click="$emit('back')"
-                    class="w-1/2 rounded-full bg-white text-black px-4 py-2 hover:bg-gray-200"
+                    class="w-full sm:w-1/2 rounded-full bg-white text-black px-4 py-2 hover:bg-gray-200"
                 >
                     Back
                 </button>
                 <button
                     @click="submit"
-                    class="w-1/2 rounded-full border border-gray-300 border-opacity-30 bg-black px-4 py-2 text-white hover:bg-gray-800"
+                    class="w-full sm:w-1/2 rounded-full border border-gray-300 border-opacity-30 bg-black px-4 py-2 text-white hover:bg-gray-800"
                     :disabled="!isValid"
                 >
                     Create Account

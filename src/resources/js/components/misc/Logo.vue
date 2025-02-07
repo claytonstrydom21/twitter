@@ -1,5 +1,5 @@
 <template>
-    <div class="flex justify-center items-center">
+    <div class="flex items-center w-full h-full">
         <svg viewBox="0 0 24 24" aria-hidden="true" class="w-full h-full">
             <path
                 fill="currentColor"

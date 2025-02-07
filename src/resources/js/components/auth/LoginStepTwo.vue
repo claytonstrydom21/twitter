@@ -35,14 +35,14 @@
         <div class="flex space-x-4">
             <button
                 @click="$emit('back')"
-                class="w-1/2 rounded-full border border-gray-300 px-4 py-2 hover:bg-gray-50"
+                class="w-1/2 rounded-full border border-gray-300 px-4 py-2 hover:bg-gray-50 hover:bg-opacity-20"
                 :disabled="loading"
             >
                 Back
             </button>
             <button
                 @click="submit"
-                class="w-1/2 rounded-full bg-black px-4 py-2 text-white hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed relative"
+                class="w-1/2 rounded-full bg-white px-4 py-2 text-black hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed relative"
                 :disabled="!isValid || loading"
             >
                 <span v-if="!loading">Log in</span>
