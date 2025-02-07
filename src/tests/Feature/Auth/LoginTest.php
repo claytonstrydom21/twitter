@@ -21,7 +21,7 @@ class LoginTest extends TestCase{
         ]);
 
         $response->assertStatus(302)
-            ->assertRedirect('/');
+            ->assertRedirect('/home');
 
         $this->assertAuthenticated();
     }
