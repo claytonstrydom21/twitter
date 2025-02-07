@@ -99,11 +99,11 @@ export default {
     computed: {
         isValid() {
             return this.username.length > 0 &&
-                this.username.length <= 15 &&
+                this.username.length <= 20 &&
                 !this.validationError;
         },
         remainingChars() {
-            return 15 - this.username.length;
+            return 20 - this.username.length;
         }
     },
     methods: {
