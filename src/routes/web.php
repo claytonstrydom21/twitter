@@ -3,7 +3,11 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\SetUsernameController;
+use App\Http\Controllers\FollowerController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LikeController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -24,6 +28,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/username-suggestions', [SetUsernameController::class, 'generateSuggestions']);
 
     Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+    Route::post('/users/{user}/follow', [FollowerController::class, 'follow'])->name('users.follow');
+    Route::delete('/users/{user}/follow', [FollowerController::class, 'unfollow'])->name('users.unfollow');
+
+    Route::get('/explore', function () {
+        return view('explore');
+    })->name('explore');
+    Route::get('/search/users', [SearchController::class, 'users']);
+    Route::get('/posts/discover', [PostController::class, 'getUnfollowedPosts']);
+    Route::get('/posts', [PostController::class, 'index']);
+    Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+    Route::post('/posts/{post}/like', [LikeController::class, 'like']);
+    Route::delete('/posts/{post}/like', [LikeController::class, 'unlike']);
 
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
