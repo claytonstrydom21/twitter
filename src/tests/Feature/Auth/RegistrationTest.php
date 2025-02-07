@@ -18,8 +18,8 @@ class RegistrationTest extends TestCase
             'password_confirmation' => 'password123',
         ]);
 
-        $response->assertStatus(302)
-            ->assertRedirect('/');
+        $response->assertStatus(200)
+            ->assertJson(['redirect' => route('set-username')]);
 
         $this->assertDatabaseHas('users', [
             'name' => 'Test User',
