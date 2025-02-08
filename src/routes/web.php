@@ -7,6 +7,7 @@ use App\Http\Controllers\FollowerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,6 +29,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/username-suggestions', [SetUsernameController::class, 'generateSuggestions']);
 
     Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profile/{user:username}', [ProfileController::class, 'show'])->name('profile.show');
 
     Route::post('/users/{user}/follow', [FollowerController::class, 'follow'])->name('users.follow');
     Route::delete('/users/{user}/follow', [FollowerController::class, 'unfollow'])->name('users.unfollow');
