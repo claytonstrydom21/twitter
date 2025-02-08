@@ -19,7 +19,7 @@
                 <div v-if="showMobileDropdown"
                      class="absolute right-0 top-full mt-2 w-56 bg-black border border-gray-800 rounded-lg shadow-lg">
                     <div class="py-1">
-                        <a href="/profile" class="block px-4 py-2 hover:bg-gray-800">Profile</a>
+                        <a :href="`/profile/${user.username}`" class="block px-4 py-2 hover:bg-gray-800">Profile</a>
                         <a href="#" class="block px-4 py-2 hover:bg-gray-800">Add existing account</a>
                         <form @submit.prevent="handleLogout">
                             <button type="submit"
@@ -72,7 +72,7 @@
                     <div v-if="showDesktopDropdown"
                          class="absolute bottom-full left-0 mb-2 w-56 bg-black border border-gray-800 rounded-lg shadow-lg">
                         <div class="py-1">
-                            <a href="/profile" class="block px-4 py-2 hover:bg-gray-800">Profile</a>
+                            <a :href="`/profile/${user.username}`" class="block px-4 py-2 hover:bg-gray-800">Profile</a>
                             <a href="#" class="block px-4 py-2 hover:bg-gray-800">Add existing account</a>
                             <form @submit.prevent="handleLogout">
                                 <button type="submit"
@@ -173,6 +173,7 @@ export default {
         }
     },
     mounted() {
+        console.log('User:', this.user);
         document.addEventListener('click', this.closeDropdowns);
     },
     beforeUnmount() {
