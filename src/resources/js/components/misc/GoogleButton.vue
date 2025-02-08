@@ -4,7 +4,7 @@
             <a class="w-5 h-5 rounded-full mr-2 bg-purple-500 flex items-center justify-center text-xs text-white sm:w-6 sm:h-6"> I </a>
             <div class="flex flex-col items-start">
                 <span class="text-xs font-semibold sm:text-sm">Sign in as Clayton</span>
-                <span class="text-xs font-medium text-gray-400 truncate max-w-[150px] sm:text-sm sm:max-w-none">claytonstrydom.10@gmail.com</span>
+                <span class="text-xs font-medium text-gray-400 truncate max-w-[250px] sm:text-sm sm:max-w-none">claytonstrydom.10@gmail.com</span>
             </div>
         </div>
         <svg class="w-4 h-4 ml-2 sm:w-5 sm:h-5" viewBox="0 0 24 24">
