@@ -18,7 +18,11 @@ import FollowButton from "./components/FollowButton.vue";
 import ExplorePage from './components/explore/ExplorePage.vue';
 import UserSearch from './components/ui/UserSearch.vue';
 import LikeButton from "./components/ui/LikeButton.vue";
+import ProfileView from "./components/profile/ProfileView.vue";
+import ProfileEdit from "./components/profile/ProfileEdit.vue";
 
+Vue.component('profile-view', ProfileView)
+Vue.component('profile-edit', ProfileEdit)
 Vue.component('like-button', LikeButton)
 Vue.component('register-modal', RegisterModal)
 Vue.component('landing-page', LandingPage)
