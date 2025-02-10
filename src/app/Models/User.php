@@ -22,7 +22,10 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
+        'avatar'
     ];
+
+    protected $appends = ['avatar_url'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -47,6 +50,11 @@ class User extends Authenticatable
         ];
     }
 
+    public function getAvatarUrlAttribute()
+    {
+        return $this->avatar ? asset('storage/' . $this->avatar) : null;
+    }
+
     public function posts()
     {
         return $this->hasMany(Post::class);
@@ -65,5 +73,15 @@ class User extends Authenticatable
     public function likes()
     {
         return $this->belongsToMany(Post::class, 'likes');
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'user_id');
+    }
+
+    public function unreadNotifications()
+    {
+        return $this->notifications()->where('is_read', false)->count();
     }
 }
