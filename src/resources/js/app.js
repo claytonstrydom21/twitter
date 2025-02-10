@@ -20,7 +20,11 @@ import UserSearch from './components/ui/UserSearch.vue';
 import LikeButton from "./components/ui/LikeButton.vue";
 import ProfileView from "./components/profile/ProfileView.vue";
 import ProfileEdit from "./components/profile/ProfileEdit.vue";
+import CommentInput from "./components/comments/CommentInput.vue";
+import Avatar from "./components/ui/Avatar.vue";
 
+Vue.component('avatar', Avatar)
+Vue.component('comment-input', CommentInput)
 Vue.component('profile-view', ProfileView)
 Vue.component('profile-edit', ProfileEdit)
 Vue.component('like-button', LikeButton)
@@ -44,3 +48,10 @@ Vue.component('user-search', UserSearch)
 const app = new Vue({
     el: '#app'
 });
+
+
+window.onpageshow = function(event) {
+    if (event.persisted) {
+        window.location.reload();
+    }
+};
