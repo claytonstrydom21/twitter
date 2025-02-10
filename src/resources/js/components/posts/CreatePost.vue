@@ -2,7 +2,11 @@
     <div class="border-b border-gray-800 pb-4 mb-4">
         <div class="flex space-x-4">
             <div class="flex-shrink-0">
-                <div class="w-12 h-12 rounded-full bg-gray-700"></div>
+                <avatar
+                    :src="user.avatar_url"
+                    :name="user.name"
+                    size="md"
+                />
             </div>
             <div class="flex-grow">
                 <form @submit.prevent="submitPost">
@@ -60,16 +64,21 @@
 
 <script>
 import PostService from "../../services/PostService.js";
+import Avatar from "../ui/Avatar.vue";
 
 export default {
     name: 'CreatePost',
+    components: {
+        Avatar
+    },
     data() {
         return {
             content: '',
             image: null,
             imagePreview: null,
             error: null,
-            isSubmitting: false
+            isSubmitting: false,
+            user: window.user || {},
         }
     },
     computed: {

@@ -3,7 +3,11 @@
         <div class="bg-gray-900 rounded-lg p-6 mb-6">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-4">
-                    <div class="w-24 h-24 bg-gray-700 rounded-full"></div>
+                    <avatar
+                        :src="user.avatar_url"
+                        :name="user.name"
+                        size="lg"
+                    />
                     <div>
                         <h1 class="text-2xl font-bold text-white">{{ user.name }}</h1>
                         <p class="text-gray-500">@{{ user.username }}</p>
@@ -23,16 +27,16 @@
                 </div>
             </div>
             <div class="mt-6 flex space-x-8">
-                <div>
-                    <span class="text-white font-bold">{{ user.posts?.length || 0 }}</span>
+                <div class="flex items-center space-x-1">
+                    <span class="text-white font-bold">{{ user.posts_count }}</span>
                     <span class="text-gray-500">Posts</span>
                 </div>
-                <div>
-                    <span class="text-white font-bold">{{ user.followers?.length || 0 }}</span>
+                <div class="flex items-center space-x-1">
+                    <span class="text-white font-bold">{{ user.followers_count }}</span>
                     <span class="text-gray-500">Followers</span>
                 </div>
-                <div>
-                    <span class="text-white font-bold">{{ user.following?.length || 0 }}</span>
+                <div class="flex items-center space-x-1">
+                    <span class="text-white font-bold">{{ user.following_count }}</span>
                     <span class="text-gray-500">Following</span>
                 </div>
             </div>
