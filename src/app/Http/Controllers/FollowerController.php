@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Traits\SecurityHeaders;
 use Illuminate\Http\JsonResponse;
 
 class FollowerController extends Controller
 {
+    use SecurityHeaders;
     public function follow(User $user): JsonResponse
     {
         if ($user->id === auth()->id()) {
@@ -18,7 +20,9 @@ class FollowerController extends Controller
         }
 
         auth()->user()->following()->attach($user->id);
-        return response()->json(['message' => 'Successfully followed user']);
+        $response = response()->json(['message' => 'Successfully followed user']);
+
+        return $this->addSecurityHeaders($response);
     }
 
     public function unfollow(User $user): JsonResponse
@@ -28,6 +32,8 @@ class FollowerController extends Controller
         }
 
         auth()->user()->following()->detach($user->id);
-        return response()->json(['message' => 'Successfully unfollowed user']);
+        $response = response()->json(['message' => 'Successfully unfollowed user']);
+
+        return $this->addSecurityHeaders($response);
     }
 }

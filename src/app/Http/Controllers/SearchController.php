@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Traits\SecurityHeaders;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
 class SearchController extends Controller
 {
+    use SecurityHeaders;
     public function users(Request $request): JsonResponse
     {
         $request->validate([
@@ -34,6 +36,8 @@ class SearchController extends Controller
                 return $user;
             });
 
-        return response()->json($users);
+        $response = response()->json($users);
+
+        return $this->addSecurityHeaders($response);
     }
 }

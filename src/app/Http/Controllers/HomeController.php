@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Traits\SecurityHeaders;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class HomeController extends Controller
 {
-    public function index()
+    use SecurityHeaders;
+    public function index(): View
     {
-        return view('home');
+        $response = response(view('home'));
+        return $this->addSecurityHeaders($response)->original;
     }
 }
