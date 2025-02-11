@@ -12,21 +12,17 @@ class ProfileController extends Controller
     use SecurityHeaders;
     public function show(User $user)
     {
-        $response = view('profile.show', [
+         return $response = view('profile.show', [
             'user' => $user->loadCount(['posts', 'followers', 'following']),
             'posts' => $user->posts()->with('user')->latest()->get()
         ]);
-
-        return $this->addSecurityHeaders($response);
     }
 
     public function edit()
     {
-        $response = view('profile.edit', [
+        return $response = view('profile.edit', [
             'user' => auth()->user()
         ]);
-
-        return $this->addSecurityHeaders($response);
     }
 
     public function update(Request $request)
@@ -49,11 +45,9 @@ class ProfileController extends Controller
 
         $user->update($validated);
 
-        $response = response()->json([
+        return $response = response()->json([
             'message' => 'Profile updated successfully',
             'user' => $user->fresh()
         ]);
-
-        return $this->addSecurityHeaders($response);
     }
 }

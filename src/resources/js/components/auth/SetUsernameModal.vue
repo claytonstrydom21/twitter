@@ -125,7 +125,6 @@ export default {
 
                 if (!/^[a-zA-Z0-9_-]+$/.test(this.username)) {
                     this.validationError = 'Username can only contain letters, numbers, underscores, and hyphens';
-                    return;
                 }
             }, 300);
         },

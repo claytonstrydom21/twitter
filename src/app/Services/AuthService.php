@@ -17,6 +17,7 @@ class AuthService
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'avatar' => $data['avatar'] ?? null
         ]);
 
         Auth::login($user);
@@ -41,10 +42,8 @@ class AuthService
 
             return true;
         } catch (UsernameUpdateException $e) {
-            Log::error('Username update error: ' . $e->getMessage());
             throw $e;
         } catch (\Exception $e) {
-            Log::error('Unexpected error setting username: ' . $e->getMessage());
             throw new UsernameUpdateException(
                 'An unexpected error occurred. Please try again.',
                 0,

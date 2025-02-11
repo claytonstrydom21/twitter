@@ -2,11 +2,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
 
 class RegisterController extends Controller
 {
@@ -28,15 +25,24 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'avatar' => ['nullable', 'image', 'max:5120']
+            'avatar' => ['nullable', 'file', 'image', 'mimes:jpeg,png,gif,webp', 'max:5120']
         ]);
 
-        if($request->hasFile('avatar')) {
-            $path = $request->file('avatar')->store('avatars', 'public');
-            $validated['avatar'] = $path;
+        $registrationData = [
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => $validated['password']
+        ];
+
+        if ($request->hasFile('avatar')) {
+            $avatarFile = $request->file('avatar');
+
+            $avatarPath = $avatarFile->store('avatars', 'public');
+
+            $registrationData['avatar'] = $avatarPath;
         }
 
-        $this->authService->register($validated);
+        $user = $this->authService->register($registrationData);
 
         return response()->json(['redirect' => route('set-username')]);
     }

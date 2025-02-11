@@ -13,10 +13,26 @@ class AuthService {
 
     async register(data) {
         try {
-            const response = await this.axios.post('/register', data);
+            const response = await this.axios.post('/register', data, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
             return response.data;
         } catch (error) {
-            throw this.handleError(error);
+            if (error.response) {
+                console.error('Registration Error Response:', error.response.data);
+
+                if (error.response.status === 422) {
+                    const errors = error.response.data.errors || {};
+                    const errorMessage = Object.values(errors)[0]?.[0] || 'Validation failed';
+                    throw new Error(errorMessage);
+                }
+
+                throw new Error(error.response.data.message || 'Registration failed');
+            }
+
+            throw error;
         }
     }
 
