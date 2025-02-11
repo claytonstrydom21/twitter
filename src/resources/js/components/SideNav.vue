@@ -21,7 +21,6 @@
                      class="absolute right-0 top-full mt-2 w-56 bg-black border border-gray-800 rounded-lg shadow-lg">
                     <div class="py-1">
                         <a :href="`/profile/${user.username}`" class="block px-4 py-2 hover:bg-gray-800">Profile</a>
-                        <a href="#" class="block px-4 py-2 hover:bg-gray-800">Add existing account</a>
                         <form @submit.prevent="handleLogout">
                             <button type="submit"
                                     class="w-full text-left px-4 py-2 hover:bg-gray-800"
@@ -58,8 +57,10 @@
                     <a href="/notifications" class="flex items-center space-x-4 p-3 rounded-full hover:bg-gray-800">
                         <span class="material-symbols-rounded text-xl">notifications</span>
                         <span class="hidden lg:block">Notifications</span>
-                        <span class="absolute top-0 right-0 bg-red-500 text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                            3
+                        <span
+                            v-if="unreadNotificationsCount > 0"
+                            class="absolute right-10 bg-red-500 text-xs rounded-full w-6 h-6 flex items-center justify-center">
+                            {{ unreadNotificationsCount}}
                         </span>
                     </a>
                 </li>
@@ -83,7 +84,6 @@
                          class="absolute bottom-full left-0 mb-2 w-56 bg-black border border-gray-800 rounded-lg shadow-lg">
                         <div class="py-1">
                             <a :href="`/profile/${user.username}`" class="block px-4 py-2 hover:bg-gray-800">Profile</a>
-                            <a href="#" class="block px-4 py-2 hover:bg-gray-800">Add existing account</a>
                             <form @submit.prevent="handleLogout">
                                 <button type="submit"
                                         class="w-full text-left px-4 py-2 hover:bg-gray-800"
@@ -107,9 +107,11 @@
                 </a>
                 <a href="/notifications" class="flex items-center justify-center p-2 relative">
                     <span class="material-symbols-rounded text-xl">notifications</span>
-                    <span class="absolute -top-1 -right-1 bg-red-500 text-xs rounded-full w-4 h-4 flex items-center justify-center">
-            3
-          </span>
+                    <span
+                        v-if="unreadNotificationsCount > 0"
+                        class="absolute right-10 bg-red-500 text-xs rounded-full w-6 h-6 flex items-center justify-center">
+                            {{ unreadNotificationsCount}}
+                        </span>
                 </a>
                 <a href="/messages" class="flex items-center justify-center p-2">
                     <span class="material-symbols-rounded text-xl">mail</span>
@@ -133,7 +135,9 @@ export default {
             user: window.user || {},
             title: 'X Clone',
             isLoggingOut: false,
-            csrf: document.querySelector('meta[name="csrf-token"]')?.content
+            csrf: document.querySelector('meta[name="csrf-token"]')?.content,
+            unreadNotificationsCount: 0,
+            notificationFetchInterval: null
         }
     },
     methods: {
@@ -191,14 +195,38 @@ export default {
                 !desktopButton.contains(e.target)) {
                 this.showDesktopDropdown = false;
             }
+        },
+        async fetchUnreadNotificationsCount() {
+            try {
+                const response = await axios.get('/notifications/count', {
+                    withCredentials: true
+                });
+                this.unreadNotificationsCount = response.data.unread_count;
+            } catch (error) {
+                console.error('Detailed Notification Count Error:', {
+                    response: error.response,
+                    request: error.request,
+                    message: error.message
+                });
+            }
         }
     },
     mounted() {
         console.log('User:', this.user);
         document.addEventListener('click', this.closeDropdowns);
+
+        this.fetchUnreadNotificationsCount();
+
+        this.notificationFetchInterval = setInterval(() => {
+            this.fetchUnreadNotificationsCount();
+        }, 60000);
     },
     beforeUnmount() {
         document.removeEventListener('click', this.closeDropdowns);
+
+        if(this.notificationFetchInterval) {
+            clearInterval(this.notificationFetchInterval);
+        }
     }
 }
 </script>

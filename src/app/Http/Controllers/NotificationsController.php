@@ -3,17 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Models\Notification;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class NotificationsController extends Controller
 {
     public function index()
     {
-        $notifications = Auth::user()->notifications()
+        $user = Auth::user();
+        $notifications = $user->notifications()
+            ->where('is_read', false)
             ->with('sender')
             ->latest()
             ->paginate(20);
+
+        $user->notifications()
+            ->where('is_read', false)
+            ->update(['is_read' => true]);
 
         return view('notifications', [
             'notifications' => $notifications
@@ -22,16 +30,58 @@ class NotificationsController extends Controller
 
     public function markAsRead(Request $request)
     {
+        $user = Auth::user();
+
         $notificationId = $request->input('notification_id');
 
-        $notification = Notification::findOrFail($notificationId);
+        if ($notificationId) {
+            $notification = Notification::findOrFail($notificationId);
 
-        if ($notification->user_id !== Auth::id()) {
-            return response()->json(['error' => 'Unauthorized'], 403);
+            if ($notification->user_id !== Auth::id()) {
+                return response()->json(['error' => 'Unauthorized'], 403);
+            }
+
+            $notification->update(['is_read' => true]);
+
+            return response()->json([
+                'success' => true,
+                'type' => 'single',
+                'notification_id' => $notificationId
+            ]);
+        } else {
+            $unreadNotifications = $user->notifications()->where('is_read', false);
+            $unreadCount = $unreadNotifications->count();
+
+            $unreadNotifications->update(['is_read' => true]);
+
+            return response()->json([
+                'success' => true,
+                'type' => 'bulk',
+                'marked_count' => $unreadCount
+            ]);
         }
+    }
 
-        $notification->update(['is_read' => true]);
+    public function getUnreadCount()
+    {
+        try {
+            if (!Auth::check()) {
+                return response()->json(['error' => 'Unauthorized'], 401);
+            }
 
-        return response()->json(['success' => true]);
+            $unreadCount = Auth::user()->notifications()->where('is_read', false)->count();
+
+            return response()->json([
+                'unread_count' => $unreadCount
+            ]);
+        } catch (Exception $e) {
+            Log::error('Notifications count error: ' . $e->getMessage());
+            Log::error($e->getTraceAsString());
+
+            return response()->json([
+                'error' => 'An unexpected error occurred',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 }
