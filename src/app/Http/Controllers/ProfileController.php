@@ -9,12 +9,21 @@ use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
-    use SecurityHeaders;
     public function show(User $user)
     {
-         return $response = view('profile.show', [
+        $posts = $user->posts()
+            ->with('user', 'likes', 'comments.user')
+            ->latest()
+            ->get()
+            ->map(function ($post) use ($user) {
+                $post->likes_count = $post->likes()->count();
+                $post->is_liked = $post->isLikedBy(auth()->user());
+                return $post;
+            });
+
+         return view('profile.show', [
             'user' => $user->loadCount(['posts', 'followers', 'following']),
-            'posts' => $user->posts()->with('user')->latest()->get()
+            'posts' => $posts
         ]);
     }
 

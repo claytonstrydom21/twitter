@@ -49,9 +49,12 @@
                             :post-id="Number(post.id)"
                             @comment-created="onCommentCreated(post.id, $event)"
                         />
-
                         <div v-for=" comment in post.comments" :key="comment.id" class="flex space-x-2">
-                            <div class="w-8 h-8 rounded-full bg-gray-700"></div>
+                            <img
+                                :src="comment.user.avatar_url || '/default-avatar.png'"
+                                :alt="comment.user.name"
+                                class="w-8 h-8 rounded-full my-auto"
+                            >
                             <div class="flex-grow ng-gray-800 rounded-lg p-2">
                                 <div class="flex items-center justify-between">
                                     <span class="font-bold text-white">@{{ comment.user.username }}</span>
