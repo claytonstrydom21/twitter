@@ -26,7 +26,7 @@ class SetUsernameController extends Controller
     {
         try {
             $validated = $request->validate([
-                'username' => ['required', 'string', 'max:15', 'unique:users,username', 'alpha_dash']
+                'username' => ['required', 'string', 'max:20', 'unique:users,username', 'alpha_dash']
             ]);
 
             $this->authService->setUsername($validated['username']);
