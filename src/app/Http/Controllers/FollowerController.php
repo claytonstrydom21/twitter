@@ -4,12 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Jobs\CreateFollowNotificationJob;
 use App\Models\User;
-use App\Traits\SecurityHeaders;
 use Illuminate\Http\JsonResponse;
 
 class FollowerController extends Controller
 {
-    use SecurityHeaders;
     public function follow(User $user): JsonResponse
     {
         $currentUser = auth()->user();
@@ -27,8 +25,7 @@ class FollowerController extends Controller
                 $currentUser->id
             );
 
-            $response = response()->json(['message' => 'Successfully followed user']);
-            return $this->addSecurityHeaders($response);
+            return response()->json(['message' => 'Successfully followed user']);
         }
         return response()->json(['message' => 'You are already following this user'], 422);
     }
@@ -40,8 +37,6 @@ class FollowerController extends Controller
         }
 
         auth()->user()->following()->detach($user->id);
-        $response = response()->json(['message' => 'Successfully unfollowed user']);
-
-        return $this->addSecurityHeaders($response);
+        return response()->json(['message' => 'Successfully unfollowed user']);
     }
 }
