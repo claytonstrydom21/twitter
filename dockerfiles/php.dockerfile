@@ -23,6 +23,14 @@ RUN sed -i "s/group = www-data/group = laravel/g" /usr/local/etc/php-fpm.d/www.c
 RUN echo "php_admin_flag[log_errors] = on" >> /usr/local/etc/php-fpm.d/www.conf
 
 RUN docker-php-ext-install pdo pdo_mysql
+
+RUN apk add --no-cache \
+    autoconf \
+    build-base \
+    linux-headers
+
+RUN pecl install redis \
+    && docker-php-ext-enable redis
     
 USER laravel
 

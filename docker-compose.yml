@@ -19,6 +19,7 @@ services:
     depends_on:
       - php
       - mysql
+      - redis
     networks:
       - laravel
 
@@ -51,6 +52,14 @@ services:
       - "9000:9000"
     volumes:
       - ./src:/var/www/html:delegated
+    networks:
+      - laravel
+
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
     networks:
       - laravel
 
