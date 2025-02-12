@@ -113,9 +113,6 @@
                             {{ unreadNotificationsCount}}
                         </span>
                 </a>
-                <a href="/messages" class="flex items-center justify-center p-2">
-                    <span class="material-symbols-rounded text-xl">mail</span>
-                </a>
             </div>
         </div>
     </nav>
@@ -155,17 +152,9 @@ export default {
                     credentials: 'same-origin'
                 });
 
-                localStorage.clear();
-                sessionStorage.clear();
-
-                window.history.pushState(null, '', '/');
-                window.history.replaceState(null, '', '/');
-
-                window.onpopstate = function(event) {
-                    window.location.href = '/';
-                };
-
                 if (response.redirected) {
+                    localStorage.clear();
+                    sessionStorage.clear();
                     window.location.href = response.url;
                 } else {
                     console.error('Unexpected response from logout endpoint');
@@ -212,7 +201,6 @@ export default {
         }
     },
     mounted() {
-        console.log('User:', this.user);
         document.addEventListener('click', this.closeDropdowns);
 
         this.fetchUnreadNotificationsCount();
