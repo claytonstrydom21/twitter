@@ -4,12 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use App\Models\Post;
-use App\Traits\SecurityHeaders;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    use SecurityHeaders;
     public function store(Request $request, Post $post)
     {
         $validated = $request->validate([
@@ -21,9 +19,7 @@ class CommentController extends Controller
             'user_id' => auth()->id()
         ]);
 
-        $response = response()->json($comment->load('user'));
-
-        return $this->addSecurityHeaders($response);
+        return response()->json($comment->load('user'));
     }
 
     public function destroy(Comment $comment)
@@ -33,8 +29,6 @@ class CommentController extends Controller
         }
 
         $comment->delete();
-        $response = response()->json(['message'=>'Comment deleted']);
-
-        return $this->addSecurityHeaders($response);
+        return response()->json(['message'=>'Comment deleted']);
     }
 }
