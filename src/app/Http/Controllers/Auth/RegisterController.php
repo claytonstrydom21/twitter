@@ -42,7 +42,7 @@ class RegisterController extends Controller
             $registrationData['avatar'] = $avatarPath;
         }
 
-        $user = $this->authService->register($registrationData);
+        $this->authService->register($registrationData);
 
         return response()->json(['redirect' => route('set-username')]);
     }

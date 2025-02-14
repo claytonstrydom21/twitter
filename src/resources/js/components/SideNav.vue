@@ -142,28 +142,25 @@ export default {
             if (this.isLoggingOut) return;
             this.isLoggingOut = true;
 
-            try {
-                const response = await fetch('/logout', {
+            await fetch('/logout', {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': this.csrf,
                         'Accept': 'application/json'
                     },
                     credentials: 'same-origin'
-                });
-
-                if (response.redirected) {
+                })
+                .then(() => {
                     localStorage.clear();
                     sessionStorage.clear();
-                    window.location.href = response.url;
-                } else {
-                    console.error('Unexpected response from logout endpoint');
-                    window.location.href = '/';
-                }
-            } catch (error) {
+
+                    window.history.replaceState(null, null, "/");
+                    window.location.href = "/";
+                })
+             .catch (error =>  {
                 console.error('Logout error:', error);
                 alert('An error occurred while logging out. Please try again.');
-            } finally {
+            })
                 this.isLoggingOut = false;
                 this.showMobileDropdown = false;
                 this.showDesktopDropdown = false;
@@ -198,7 +195,7 @@ export default {
                     message: error.message
                 });
             }
-        }
+
     },
     mounted() {
         document.addEventListener('click', this.closeDropdowns);
