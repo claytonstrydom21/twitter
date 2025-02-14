@@ -122,7 +122,7 @@ export default {
             }
 
             try {
-                const response = await axios.post('/profile', formData, {
+                await axios.post('/profile', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         'X-HTTP-Method-Override': 'PATCH'

@@ -119,7 +119,9 @@
 </template>
 
 <script>
+import axios from 'axios';
 import Avatar from "./ui/Avatar.vue";
+
 export default {
     name: 'SideNav',
     components: {
@@ -142,25 +144,25 @@ export default {
             if (this.isLoggingOut) return;
             this.isLoggingOut = true;
 
-            await fetch('/logout', {
+            try {
+                await fetch('/logout', {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': this.csrf,
                         'Accept': 'application/json'
                     },
                     credentials: 'same-origin'
-                })
-                .then(() => {
-                    localStorage.clear();
-                    sessionStorage.clear();
+                });
 
-                    window.history.replaceState(null, null, "/");
-                    window.location.href = "/";
-                })
-             .catch (error =>  {
+                localStorage.clear();
+                sessionStorage.clear();
+
+                window.history.replaceState(null, null, "/");
+                window.location.href = "/";
+            } catch (error) {
                 console.error('Logout error:', error);
                 alert('An error occurred while logging out. Please try again.');
-            })
+            } finally {
                 this.isLoggingOut = false;
                 this.showMobileDropdown = false;
                 this.showDesktopDropdown = false;
@@ -195,11 +197,10 @@ export default {
                     message: error.message
                 });
             }
-
+        }
     },
     mounted() {
         document.addEventListener('click', this.closeDropdowns);
-
         this.fetchUnreadNotificationsCount();
 
         this.notificationFetchInterval = setInterval(() => {
@@ -208,7 +209,6 @@ export default {
     },
     beforeUnmount() {
         document.removeEventListener('click', this.closeDropdowns);
-
         if(this.notificationFetchInterval) {
             clearInterval(this.notificationFetchInterval);
         }

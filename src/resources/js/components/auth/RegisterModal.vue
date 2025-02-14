@@ -63,11 +63,7 @@ export default {
             try {
                 const formData = new FormData();
 
-                console.log('Full Registration Data:', {
-                    name: this.registrationData.name,
-                    email: this.registrationData.email,
-                    avatar: data.avatar
-                });
+                formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
 
                 formData.append('name', this.registrationData.name);
                 formData.append('email', this.registrationData.email);
@@ -75,16 +71,10 @@ export default {
                 formData.append('password_confirmation', this.registrationData.password_confirmation);
 
                 if (data.avatar) {
-                    console.log('Avatar File Details:', {
-                        name: data.avatar.name,
-                        size: data.avatar.size,
-                        type: data.avatar.type
-                    });
-                    formData.append('avatar', data.avatar);
+                    formData.append('avatar', data.avatar, data.avatar.name);
                 }
 
                 const response = await AuthService.register(formData);
-                console.log('reg res:' , response);
                 window.location.href = response.redirect;
             } catch (error) {
                 console.error('Registration error:', error);
