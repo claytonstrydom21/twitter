@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Traits\SecurityHeaders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class ProfileController extends Controller
 {
@@ -36,27 +36,34 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . auth()->id()],
-            'username' => ['required', 'string', 'max:255', 'unique:users,username,' . auth()->id()],
-            'avatar' => ['nullable', 'image', 'max:5120']
-        ]);
+        try {
+            $validated = $request->validate([
+                'name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . auth()->id()],
+                'username' => ['required', 'string', 'max:255', 'unique:users,username,' . auth()->id()],
+                'avatar' => ['nullable', 'image', 'max:5120']
+            ]);
 
-        $user = auth()->user();
+            $user = auth()->user();
 
-        if ($request->hasFile('avatar')) {
-            if($user->avatar) {
-                Storage::disk('public')->delete($user->avatar);
+            if ($request->hasFile('avatar')) {
+                if($user->avatar) {
+                    Storage::disk('public')->delete($user->avatar);
+                }
+                $validated['avatar'] = $request->file('avatar')->store('avatars', 'public');
             }
-            $validated['avatar'] = $request->file('avatar')->store('avatars', 'public');
+
+            $user->update($validated);
+
+            return response()->json([
+                'message' => 'Profile updated successfully',
+                'user' => $user->fresh()
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => $e->errors()
+            ], 422);
         }
-
-        $user->update($validated);
-
-        return $response = response()->json([
-            'message' => 'Profile updated successfully',
-            'user' => $user->fresh()
-        ]);
     }
 }

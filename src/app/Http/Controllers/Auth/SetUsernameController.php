@@ -26,25 +26,30 @@ class SetUsernameController extends Controller
     {
         try {
             $validated = $request->validate([
-                'username' => ['required', 'string', 'max:20', 'unique:users,username', 'alpha_dash']
+                'username' => [
+                    'required',
+                    'string',
+                    'max:20',
+                    'unique:users,username',
+                    'alpha_dash'
+                ]
             ]);
 
             $this->authService->setUsername($validated['username']);
 
             return response()->json(['redirect' => route('home')]);
         } catch (ValidationException $e) {
-            if (isset($e->errors()['username'])) {
-                foreach ($e->errors()['username'] as $error) {
-                    if (str_contains($error, 'already been taken')) {
-                        return response()->json([
-                            'message' => 'This username has already been taken',
-                            'field' => 'username'
-                        ], 422);
-                    }
-                }
-            }
+            $usernameErrors = $e->errors()['username'] ?? [];
+
+            $errorMessage = collect($usernameErrors)
+                ->first(fn($error) => str_contains($error, 'already been taken'))
+                ?? $e->getMessage();
+
             return response()->json([
-                'message' => $e->getMessage()
+                'message' => $errorMessage === $e->getMessage()
+                    ? $errorMessage
+                    : 'This username has already been taken',
+                'field' => 'username'
             ], 422);
         }
     }
