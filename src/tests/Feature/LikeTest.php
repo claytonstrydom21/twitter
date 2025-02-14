@@ -32,7 +32,6 @@ class LikeTest extends TestCase
         $user = User::factory()->create();
         $post = Post::factory()->create();
 
-        // First like the post
         $user->likes()->attach($post->id);
 
         $response = $this->actingAs($user)
