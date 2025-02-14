@@ -70,4 +70,20 @@ class ProfileTest extends TestCase
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['email']);
     }
+
+    public function test_a_user_cannot_update_to_existing_username()
+    {
+        $user1 = User::factory()->create(['username' => 'username1']);
+        $user2 = User::factory()->create(['username' => 'username2']);
+
+        $response = $this->actingAs($user1)
+            ->patch('/profile', [
+                'name' => 'Updated Name',
+                'email' => $user1->email,
+                'username' => 'username2'
+            ]);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['username']);
+    }
 }
