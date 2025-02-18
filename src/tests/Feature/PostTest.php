@@ -65,7 +65,6 @@ class PostTest extends TestCase
     {
         $user = User::factory()->create();
 
-        // Create some posts
         Post::factory(3)->create([
             'user_id' => $user->id
         ]);

@@ -76,8 +76,7 @@ export default {
     methods: {
         async fetchUnfollowedPosts() {
             try {
-                const response = await postService.getUnfollowedPosts();
-                this.posts = response;
+                this.posts = await postService.getUnfollowedPosts();
             } catch (error) {
                 console.error('Error fetching posts:', error);
             }

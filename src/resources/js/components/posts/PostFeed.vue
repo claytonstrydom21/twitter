@@ -22,8 +22,7 @@ export default {
     methods: {
         async fetchPosts() {
             try {
-                const posts = await postService.getPosts();
-                this.posts = posts;
+                this.posts = await postService.getPosts();
             } catch (error) {
                 console.error('Error fetching posts:', error);
             }
@@ -31,8 +30,7 @@ export default {
     },
     async mounted() {
         try {
-            const posts = await postService.getPosts();
-            this.posts = posts;
+            this.posts = await postService.getPosts();
         } catch (error) {
             console.error('Error fetching posts:', error);
         }

@@ -75,9 +75,6 @@ class NotificationsController extends Controller
                 'unread_count' => $unreadCount
             ]);
         } catch (Exception $e) {
-            Log::error('Notifications count error: ' . $e->getMessage());
-            Log::error($e->getTraceAsString());
-
             return response()->json([
                 'error' => 'An unexpected error occurred',
                 'message' => $e->getMessage()

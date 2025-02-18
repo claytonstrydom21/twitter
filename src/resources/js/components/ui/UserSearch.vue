@@ -1,4 +1,3 @@
-<!-- resources/js/components/search/UserSearch.vue -->
 <template>
     <div class="bg-gray-900 rounded-lg p-4">
         <div class="relative">
